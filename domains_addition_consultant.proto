@@ -26,7 +26,7 @@ service DomainAdditionConsultant {
 }
 
 message DomainAdditionRequest {
-  google.protobuf.StringValue domain = 1;
+  string domain = 1;
 }
 
 message DomainAdditionResponse {
@@ -34,7 +34,7 @@ message DomainAdditionResponse {
 }
 
 message AdditionPossibilities {
-  oneof action_selector {
+  oneof addition_selector {
     DomainAddition domain_addition = 1;
     SubDomainAddition sub_domain_addition = 2;
   }
@@ -42,15 +42,17 @@ message AdditionPossibilities {
 
 message DomainAddition {
   enum ExternalAvailabilityStatus {
-    AVAILABLE = 0;
-    TAKEN = 1;
-    NOT_SUPPORTED = 2;
+    UNKNOWN_ExternalAvailabilityStatus = 0;
+    AVAILABLE = 1;
+    TAKEN = 2;
+    NOT_SUPPORTED = 3;
   }
 
   enum CanBeAddedBy {
-    CONNECTION = 0;
-    POINTING = 1;
-    REGISTRATION = 2;
+    UNKNOWN_CanBeAddedBy = 0;
+    CONNECTION = 1;
+    POINTING = 2;
+    REGISTRATION = 3;
   }
 
   google.protobuf.StringValue owner_account_id = 1;

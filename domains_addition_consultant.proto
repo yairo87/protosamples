@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "wix/api/annotations.proto";
+import "wix/api/validations.proto";
+import "wix/common/query.proto";
+import "wix/api/entity.proto";
+import "wix/api/callback.proto";
+import "google/protobuf/wrappers.proto";
+
+service DomainAdditionConsultant {
+
+  option (wix.api.service_entity).message = "com.wixpress.premium.domain.consult.Addition";
+
+  option (.wix.api.service_maturity) = ALPHA;
+  option (.wix.api.service_exposure) = PRIVATE;
+
+  rpc DomainAdditionConsult (DomainAdditionRequest) returns (DomainAdditionResponse) {
+    option (wix.api.maturity) = BETA;
+    option (wix.api.exposure) = INTERNAL;
+    option (google.api.http) = {
+      get: "/api/v1/domain-consultant/addition"
+    };
+  };
+
+}
+
+message DomainAdditionRequest {
+  google.protobuf.StringValue domain = 1;
+}
+
+message DomainAdditionResponse {
+  AdditionPossibilities domain_addition_possibilities = 1;
+}
+
+message AdditionPossibilities {
+  oneof action_selector {
+    DomainAddition domain_addition = 1;
+    SubDomainAddition sub_domain_addition = 2;
+  }
+}
+
+message DomainAddition {
+  enum ExternalAvailabilityStatus {
+    AVAILABLE = 0;
+    TAKEN = 1;
+    NOT_SUPPORTED = 2;
+  }
+
+  enum CanBeAddedBy {
+    CONNECTION = 0;
+    POINTING = 1;
+    REGISTRATION = 2;
+  }
+
+  google.protobuf.StringValue owner_account_id = 1;
+  ExternalAvailabilityStatus available_world_wide = 2;
+  bool supported_tld = 3;
+  bool registration_request_exists = 4;
+  repeated CanBeAddedBy can_be_added_by = 5;
+}
+
+message SubDomainAddition {
+  enum CanBeAddedBy {
+    CONNECTION = 0;
+    POINTING = 1;
+  }
+  google.protobuf.StringValue owner_account_id = 1;
+  google.protobuf.StringValue root_domain = 2;
+  google.protobuf.StringValue owner_account_id_root_domain = 3;
+  repeated CanBeAddedBy can_be_added_by = 5;
+}
